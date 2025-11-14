@@ -24,13 +24,11 @@ export default function LMPInputScreen({ navigation }: any) {
         const diffInDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
         const weeksPassed = Math.floor(diffInDays / 7);
 
-        // בדיקה אם התאריך בעתיד
         if (date > now) {
             alert('תאריך הווסת לא יכול להיות בעתיד.');
             return;
         }
 
-        // בדיקה אם עברו יותר מ-40 שבועות
         if (weeksPassed > 40) {
             alert('עברו כבר יותר מ-40 שבועות מהתאריך שנבחר. אנא הזיני תאריך עדכני יותר.');
             return;
@@ -41,10 +39,12 @@ export default function LMPInputScreen({ navigation }: any) {
             ['@username', name],
         ]);
 
+        const finalName = await AsyncStorage.getItem('@username') || 'משתמש';
+
         const info = getPregnancyInfoFromLMP(iso);
         console.log('Pregnancy info:', info);
 
-        await scheduleWeeklyPregnancyNotifications(iso, name);
+        await scheduleWeeklyPregnancyNotifications(iso, finalName);
         navigation.replace('Dashboard');
     };
 
@@ -119,7 +119,7 @@ export default function LMPInputScreen({ navigation }: any) {
             <View style={{ height: 20 }} />
 
             <Button mode="contained" onPress={onSave}>
-                שמור והמשך
+                שמירה והמשך
             </Button>
         </View>
     );
